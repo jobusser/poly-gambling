@@ -1,0 +1,1 @@
+# from binance. Polling for now, eventually we do a websocket stream
