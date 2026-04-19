@@ -1,0 +1,23 @@
+database:
+  dev: dev.db       # local sandbox, reset freely
+  test: test.db     # created fresh by pytest, deleted after
+  sim: sim.db       # paper trading — treat like prod, never delete
+  env: dev          # active environment: dev | test | sim
+
+data:
+  symbol: BTC-USD
+  interval: 15m
+  lookback_days: 30  # max 60 for 15m data via yfinance
+
+broker:
+  initial_capital: 10000.0
+  fee_rate: 0.025          # 2.5% Polymarket fee per trade
+  payout_multiplier: 1.95  # gross payout on a correct prediction
+  bet_fraction: 0.02       # fraction of capital wagered per trade
+
+strategy:
+  moving_average:
+    short_window: 5
+    long_window: 20
+  signal:
+    confidence_threshold: 0.55  # minimum confidence to place a trade

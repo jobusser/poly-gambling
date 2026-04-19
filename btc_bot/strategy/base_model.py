@@ -1,26 +1,31 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from enum import Enum
+
 import pandas as pd
 
+
+class Direction(Enum):
+    UP = "UP"
+    DOWN = "DOWN"
+
+
+@dataclass
+class Signal:
+    direction: Direction
+    confidence: float  # 0.5 = coin flip, 1.0 = certain
+
+
 class BaseModel(ABC):
+    """All prediction strategies implement this interface.
+
+    predict() receives the full candle history available at decision time
+    and returns a Signal. Strategies must not peek at future candles.
+    """
+
+    @property
     @abstractmethod
-    def predict(self, df: pd.DataFrame) -> float:
-        """
-        Processes market data and returns a prediction.
-        
-        Args:
-            df (pd.DataFrame): Input dataframe containing candles and/or feature data.
-            
-        Returns:
-            float: A prediction value (e.g., expected return, signal strength, or price).
-        """
-        pass
+    def name(self) -> str: ...
 
-"""
-class RSIMessageModel(BaseModel):
-    def predict(self, df: pd.DataFrame) -> float:
-        # Simplified logic: return the last RSI value as a float
-        return float(df['rsi'].iloc[-1])
-
-# This would raise a TypeError if predict() was not defined
-model = RSIMessageModel()
-"""
+    @abstractmethod
+    def predict(self, df: pd.DataFrame) -> Signal: ...
